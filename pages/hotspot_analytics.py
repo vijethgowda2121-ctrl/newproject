@@ -1,31 +1,19 @@
 import streamlit as st
+import pandas as pd
 import plotly.express as px
 
-from utils.data_loader import load_data
+st.title("Hotspot Analytics")
 
-sessions,nodes = load_data()
-
-st.title("🔥 Hotspot Analytics")
-
-hotspots = (
-    sessions.groupby("node_id")
-    .size()
-    .reset_index(name="sessions")
-)
-
-hotspots = hotspots.sort_values(
-    "sessions",
-    ascending=False
-)
+data = pd.DataFrame({
+    "Location": ["A", "B", "C", "D"],
+    "Visits": [120, 90, 150, 80]
+})
 
 fig = px.bar(
-    hotspots.head(10),
-    x="node_id",
-    y="sessions",
-    title="Top 10 Busiest Hotspots"
+    data,
+    x="Location",
+    y="Visits",
+    title="Hotspot Visits"
 )
 
-st.plotly_chart(
-    fig,
-    use_container_width=True
-)
+st.plotly_chart(fig, use_container_width=True)
