@@ -1,45 +1,16 @@
 import streamlit as st
+import pandas as pd
 import plotly.express as px
 
-from utils.data_loader import load_data
+st.title("WiFi Session Analysis")
 
-sessions,nodes = load_data()
+df = pd.read_csv("wifi_session.csv")
 
-st.title("⏰ Time Analysis")
-
-hourly = (
-    sessions.groupby("hour")
-    .size()
-    .reset_index(name="sessions")
+fig = px.histogram(
+    df,
+    x="session_duration",
+    nbins=30,
+    title="Session Duration Distribution"
 )
 
-fig = px.line(
-    hourly,
-    x="hour",
-    y="sessions",
-    markers=True,
-    title="Hourly Usage Pattern"
-)
-
-st.plotly_chart(
-    fig,
-    use_container_width=True
-)
-
-daily = (
-    sessions.groupby("date")
-    .size()
-    .reset_index(name="sessions")
-)
-
-fig2 = px.area(
-    daily,
-    x="date",
-    y="sessions",
-    title="Daily Traffic Trend"
-)
-
-st.plotly_chart(
-    fig2,
-    use_container_width=True
-)
+st.plotly_chart(fig, use_container_width=True)
