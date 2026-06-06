@@ -1,27 +1,50 @@
+import streamlit as st
 import pandas as pd
-import os
 
-def load_data():
-    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# Page configuration
+st.set_page_config(
+    page_title="Overview Dashboard",
+    layout="wide"
+)
 
-    sessions_path = os.path.join(base_dir, "data", "wifi_sessions.csv")
-    nodes_path = os.path.join(base_dir, "data", "wifi_nodes.csv")
+st.title("📊 Overview Dashboard")
 
-    if not os.path.exists(sessions_path):
-        sessions = pd.DataFrame({
-            "session_id": [1, 2, 3],
-            "user_count": [25, 40, 30],
-            "duration": [15, 20, 10]
-        })
-    else:
-        sessions = pd.read_csv(sessions_path)
+# Sample data
+sessions = pd.DataFrame({
+    "Date": ["2025-01-01", "2025-01-02", "2025-01-03", "2025-01-04"],
+    "Sessions": [120, 150, 180, 140]
+})
 
-    if not os.path.exists(nodes_path):
-        nodes = pd.DataFrame({
-            "node_id": [101, 102, 103],
-            "location": ["A", "B", "C"]
-        })
-    else:
-        nodes = pd.read_csv(nodes_path)
+nodes = pd.DataFrame({
+    "Node": ["Node A", "Node B", "Node C"],
+    "Users": [45, 60, 35]
+})
 
-    return sessions, nodes
+# Metrics
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.metric("Total Sessions", int(sessions["Sessions"].sum()))
+
+with col2:
+    st.metric("Average Sessions", round(sessions["Sessions"].mean(), 2))
+
+with col3:
+    st.metric("Total Nodes", len(nodes))
+
+# Session trend
+st.subheader("Session Trend")
+st.line_chart(sessions.set_index("Date")["Sessions"])
+
+# Node usage
+st.subheader("Node Usage")
+st.bar_chart(nodes.set_index("Node")["Users"])
+
+# Data tables
+st.subheader("Session Data")
+st.dataframe(sessions)
+
+st.subheader("Node Data")
+st.dataframe(nodes)
+
+st.success("Overview dashboard loaded successfully.")
