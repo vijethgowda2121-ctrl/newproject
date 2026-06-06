@@ -1,36 +1,27 @@
-import streamlit as st
-from utils.data_loader import load_data
-from utils.analytics import get_kpis
+import pandas as pd
+import os
 
-sessions,nodes = load_data()
+def load_data():
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-kpi = get_kpis(sessions)
+    sessions_path = os.path.join(base_dir, "data", "wifi_sessions.csv")
+    nodes_path = os.path.join(base_dir, "data", "wifi_nodes.csv")
 
-st.title("📊 Overview Dashboard")
+    if not os.path.exists(sessions_path):
+        sessions = pd.DataFrame({
+            "session_id": [1, 2, 3],
+            "user_count": [25, 40, 30],
+            "duration": [15, 20, 10]
+        })
+    else:
+        sessions = pd.read_csv(sessions_path)
 
-c1,c2,c3,c4,c5 = st.columns(5)
+    if not os.path.exists(nodes_path):
+        nodes = pd.DataFrame({
+            "node_id": [101, 102, 103],
+            "location": ["A", "B", "C"]
+        })
+    else:
+        nodes = pd.read_csv(nodes_path)
 
-c1.metric(
-"Sessions",
-f"{kpi['sessions']:,}"
-)
-
-c2.metric(
-"Users",
-f"{kpi['users']:,}"
-)
-
-c3.metric(
-"Data(MB)",
-f"{kpi['data']:,.0f}"
-)
-
-c4.metric(
-"Avg Duration",
-f"{kpi['duration']:.1f} min"
-)
-
-c5.metric(
-"Hotspots",
-kpi['hotspots']
-)
+    return sessions, nodes
