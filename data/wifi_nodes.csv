@@ -1,0 +1,19 @@
+import pandas as pd
+
+# Load the CSV file
+wifi_nodes = pd.read_csv("wifi_nodes.csv")
+
+# Display first few rows
+print(wifi_nodes.head())
+
+# Show column names
+print("\nColumns:")
+print(wifi_nodes.columns.tolist())
+
+# Dataset information
+print("\nInfo:")
+print(wifi_nodes.info())
+
+# Summary statistics
+print("\nSummary:")
+print(wifi_nodes.describe(include='all'))
