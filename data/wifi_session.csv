@@ -1,0 +1,13 @@
+import pandas as pd
+
+# Load CSV
+df = pd.read_csv("wifi_session.csv")
+
+# Preview data
+print(df.head())
+
+# Basic information
+print(df.info())
+
+# Summary statistics
+print(df.describe(include='all'))
